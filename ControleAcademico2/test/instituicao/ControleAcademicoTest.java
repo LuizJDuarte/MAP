@@ -1,18 +1,10 @@
 package instituicao;
-import org.junit.Test;
-
-import instituicao.exceptions.DisciplinaInvalidaException;
-import instituicao.exceptions.ProfessorNaoEncontradoException;
-
-import static org.junit.Assert.*;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import instituicao.*;
-import instituicao.exceptions.DisciplinaInvalidaException;
-import instituicao.exceptions.ProfessorNaoEncontradoException;
+import instituicao.exceptions.*;
 
 public class ControleAcademicoTest {
     private ControleAcademico controle;
@@ -69,5 +61,69 @@ public class ControleAcademicoTest {
         assertEquals(1, controle.getHorariosDaDisciplina(disciplina).size());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testAdicionarDisciplinaDuplicadaParaAluno() throws DisciplinaInvalidaException {
+        controle.adicionarDisciplinaParaAluno(aluno, disciplina);
+        controle.adicionarDisciplinaParaAluno(aluno, disciplina); // Tentar adicionar novamente
+    }
 
+    @Test
+    public void testRemoverAluno() throws AlunoNaoEncontradoException {
+        controle.removerAluno(aluno);
+        assertEquals(0, controle.getAlunos().size());
+    }
+
+    @Test(expected = AlunoNaoEncontradoException.class)
+    public void testRemoverAlunoNaoExistente() throws AlunoNaoEncontradoException {
+        Aluno alunoNaoExistente = new Aluno("Raquel Melo", "20230002");
+        controle.removerAluno(alunoNaoExistente);
+    }
+
+    @Test
+    public void testRemoverDisciplina() throws DisciplinaNaoEncontradaException {
+        controle.removerDisciplina(disciplina);
+        assertEquals(0, controle.getDisciplinas().size());
+    }
+
+    @Test(expected = DisciplinaNaoEncontradaException.class)
+    public void testRemoverDisciplinaNaoExistente() throws DisciplinaNaoEncontradaException {
+        Disciplina disciplinaNaoExistente = new Disciplina("Engenharia de Software", "ESW101");
+        controle.removerDisciplina(disciplinaNaoExistente);
+    }
+
+    @Test
+    public void testRemoverProfessor() throws ProfessorNaoEncontradoException {
+        controle.removerProfessor(professor);
+        assertEquals(0, controle.getProfessores().size());
+    }
+
+    @Test(expected = ProfessorNaoEncontradoException.class)
+    public void testRemoverProfessorNaoExistente() throws ProfessorNaoEncontradoException {
+        Professor professorNaoExistente = new Professor("Ana Isabella", "67890");
+        controle.removerProfessor(professorNaoExistente);
+    }
+
+    @Test
+    public void testRemoverAssociacaoAlunoDisciplina() throws AssociacaoNaoEncontradaException, DisciplinaInvalidaException {
+        controle.adicionarDisciplinaParaAluno(aluno, disciplina);
+        controle.removerAssociacaoAlunoDisciplina(aluno, disciplina);
+        assertEquals(0, aluno.getAlunoDisciplinas().size());
+    }
+
+    @Test(expected = AssociacaoNaoEncontradaException.class)
+    public void testRemoverAssociacaoAlunoDisciplinaNaoExistente() throws AssociacaoNaoEncontradaException {
+        controle.removerAssociacaoAlunoDisciplina(aluno, disciplina);
+    }
+
+    @Test
+    public void testRemoverAssociacaoProfessorDisciplina() throws AssociacaoNaoEncontradaException, ProfessorNaoEncontradoException {
+        controle.adicionarProfessorParaDisciplina(disciplina, professor);
+        controle.removerAssociacaoProfessorDisciplina(professor, disciplina);
+        assertEquals(0, professor.getProfessorDisciplinas().size());
+    }
+
+    @Test(expected = AssociacaoNaoEncontradaException.class)
+    public void testRemoverAssociacaoProfessorDisciplinaNaoExistente() throws AssociacaoNaoEncontradaException {
+        controle.removerAssociacaoProfessorDisciplina(professor, disciplina);
+    }
 }
