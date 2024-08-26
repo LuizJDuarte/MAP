@@ -5,6 +5,9 @@ public class Horario {
     private String hora;
 
     public Horario(String dia, String hora) {
+        if (dia == null || dia.isEmpty() || hora == null || hora.isEmpty()) {
+            throw new IllegalArgumentException("Dia e hora não podem ser nulos ou vazios");
+        }
         this.dia = dia;
         this.hora = hora;
     }

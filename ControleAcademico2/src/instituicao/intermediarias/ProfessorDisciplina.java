@@ -22,4 +22,22 @@ public class ProfessorDisciplina {
     public Disciplina getDisciplina() {
         return disciplina;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProfessorDisciplina that = (ProfessorDisciplina) o;
+
+        if (!professor.equals(that.professor)) return false;
+        return disciplina.equals(that.disciplina);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = professor.hashCode();
+        result = 31 * result + disciplina.hashCode();
+        return result;
+    }
 }
